@@ -6,7 +6,7 @@ This tool is used for Domain Hijack detection based on behavior line of the reso
 # Usage
 
 1. First change the corresponding file name in config file.  
-* It requires the test resolver file, recurisive resolver file and the monitored domain name. *
+It requires the test resolver file, recurisive resolver file and the monitored domain name.
 
 2. Execute the execute.sh by bash execute.sh
 
