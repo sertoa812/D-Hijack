@@ -1,0 +1,59 @@
+[global]
+dataset=aboard-4
+tmp_folder = ../aboard-4-TMP/20240705
+domain_file = ../domain-list/aboard-4.txt
+result_folder = ../aboard-4-RESULT
+
+[0_parse_pcap]
+source_folder = ../aboard-4-DATASET/ite_data/
+dest_folder = ../aboard-4-DATASET/ite_data_dealed/
+
+[1_rbline_ip]
+rb_file = ../aboard-4-DATASET/ite_data_dealed/t_20240705.csv
+test_file = ../aboard-4-DATASET/resolver_data/resolver_20240705
+
+output_suspicious_name = {tmp_folder}/1_aboard-4_pickle_suspicious_domain_ip
+output_white_name = {tmp_folder}/1_aboard-4_pickle_white_domain_ip
+output_reverse_name = {tmp_folder}/1_aboard-4_pickle_reverse_suspicious_map
+
+[2_1_get_cdn]
+suspicious_domain_ip_file = {tmp_folder}/1_aboard-4_pickle_suspicious_domain_ip
+ptr_output_file = {tmp_folder}/2_1_aboard-4_cdn_ptr_query_record
+
+[2_2_cdn_filter]
+suspicious_domain_ip_file = {tmp_folder}/1_aboard-4_pickle_suspicious_domain_ip
+ptr_output_file = {tmp_folder}/2_1_aboard-4_cdn_ptr_query_record
+save_suspicious_domain_ip_file = {tmp_folder}/1_aboard-4_cdn_filtered_suspicious_domain_ip
+
+[2_3_get_certs]
+pickle_load_white_file = {tmp_folder}/1_aboard-4_pickle_white_domain_ip
+pickle_save_white_file = {tmp_folder}/1_aboard-4_pickle_white_cert
+
+pickle_load_suspicious_file = {tmp_folder}/1_aboard-4_pickle_suspicious_domain_ip
+pickle_save_suspicious_file = {tmp_folder}/1_aboard-4_pickle_suspicious_cert
+
+[3_rbline_certs]
+# load previous file
+suspicious_domain_ip_file = {tmp_folder}/1_aboard-4_pickle_suspicious_domain_ip
+white_domain_ip_file = {tmp_folder}/1_aboard-4_pickle_white_domain_ip
+white_cert = {tmp_folder}/1_aboard-4_pickle_white_cert
+test_cert = {tmp_folder}/1_aboard-4_pickle_suspicious_cert
+
+# save current results
+suspicious_certs_ip_file = {tmp_folder}/2_aboard-4_certs_suspicious_dip
+suspicious_certs_pickle = {tmp_folder}/2_aboard-4_pickle_suspicious_domain_ip
+white_certs_pickle = {tmp_folder}/2_aboard-4_pickle_white_domain_ip
+
+[4_get_html]
+pickle_load_white_file = {tmp_folder}/2_aboard-4_pickle_white_domain_ip
+pickle_save_white_file = {tmp_folder}/2_aboard-4_pickle_white_html
+pickle_load_suspicious_file = {tmp_folder}/2_aboard-4_pickle_suspicious_domain_ip
+pickle_save_suspicious_file = {tmp_folder}/2_aboard-4_pickle_suspicious_html
+
+[5_rbline_html]
+suspicious_pickle_file = {tmp_folder}/2_aboard-4_pickle_suspicious_html
+save_pure_ip_file = {tmp_folder}/3_aboard-4_suspicious_html_ip
+save_domain_ip_file = {tmp_folder}/2_aboard-4_suspicious_html_domain_ip
+
+[6_result]
+result_output = {result_folder}/result_aboard-4_20240705

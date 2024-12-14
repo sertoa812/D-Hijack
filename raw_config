@@ -1,0 +1,59 @@
+[global]
+dataset={REAL_DATASET}
+tmp_folder = ../{REAL_DATASET}-TMP/{DATE}
+domain_file = ../domain-list/{REAL_DATASET}.txt
+result_folder = ../{REAL_DATASET}-RESULT
+
+[0_parse_pcap]
+source_folder = ../{REAL_DATASET}-DATASET/ite_data/
+dest_folder = ../{REAL_DATASET}-DATASET/ite_data_dealed/
+
+[1_rbline_ip]
+rb_file = ../{REAL_DATASET}-DATASET/ite_data_dealed/t_{DATE}.csv
+test_file = ../{REAL_DATASET}-DATASET/resolver_data/resolver_{DATE}
+
+output_suspicious_name = {tmp_folder}/1_{REAL_DATASET}_pickle_suspicious_domain_ip
+output_white_name = {tmp_folder}/1_{REAL_DATASET}_pickle_white_domain_ip
+output_reverse_name = {tmp_folder}/1_{REAL_DATASET}_pickle_reverse_suspicious_map
+
+[2_1_get_cdn]
+suspicious_domain_ip_file = {tmp_folder}/1_{REAL_DATASET}_pickle_suspicious_domain_ip
+ptr_output_file = {tmp_folder}/2_1_{REAL_DATASET}_cdn_ptr_query_record
+
+[2_2_cdn_filter]
+suspicious_domain_ip_file = {tmp_folder}/1_{REAL_DATASET}_pickle_suspicious_domain_ip
+ptr_output_file = {tmp_folder}/2_1_{REAL_DATASET}_cdn_ptr_query_record
+save_suspicious_domain_ip_file = {tmp_folder}/1_{REAL_DATASET}_cdn_filtered_suspicious_domain_ip
+
+[2_3_get_certs]
+pickle_load_white_file = {tmp_folder}/1_{REAL_DATASET}_pickle_white_domain_ip
+pickle_save_white_file = {tmp_folder}/1_{REAL_DATASET}_pickle_white_cert
+
+pickle_load_suspicious_file = {tmp_folder}/1_{REAL_DATASET}_pickle_suspicious_domain_ip
+pickle_save_suspicious_file = {tmp_folder}/1_{REAL_DATASET}_pickle_suspicious_cert
+
+[3_rbline_certs]
+# load previous file
+suspicious_domain_ip_file = {tmp_folder}/1_{REAL_DATASET}_pickle_suspicious_domain_ip
+white_domain_ip_file = {tmp_folder}/1_{REAL_DATASET}_pickle_white_domain_ip
+white_cert = {tmp_folder}/1_{REAL_DATASET}_pickle_white_cert
+test_cert = {tmp_folder}/1_{REAL_DATASET}_pickle_suspicious_cert
+
+# save current results
+suspicious_certs_ip_file = {tmp_folder}/2_{REAL_DATASET}_certs_suspicious_dip
+suspicious_certs_pickle = {tmp_folder}/2_{REAL_DATASET}_pickle_suspicious_domain_ip
+white_certs_pickle = {tmp_folder}/2_{REAL_DATASET}_pickle_white_domain_ip
+
+[4_get_html]
+pickle_load_white_file = {tmp_folder}/2_{REAL_DATASET}_pickle_white_domain_ip
+pickle_save_white_file = {tmp_folder}/2_{REAL_DATASET}_pickle_white_html
+pickle_load_suspicious_file = {tmp_folder}/2_{REAL_DATASET}_pickle_suspicious_domain_ip
+pickle_save_suspicious_file = {tmp_folder}/2_{REAL_DATASET}_pickle_suspicious_html
+
+[5_rbline_html]
+suspicious_pickle_file = {tmp_folder}/2_{REAL_DATASET}_pickle_suspicious_html
+save_pure_ip_file = {tmp_folder}/3_{REAL_DATASET}_suspicious_html_ip
+save_domain_ip_file = {tmp_folder}/2_{REAL_DATASET}_suspicious_html_domain_ip
+
+[6_result]
+result_output = {result_folder}/result_{REAL_DATASET}_{DATE}
